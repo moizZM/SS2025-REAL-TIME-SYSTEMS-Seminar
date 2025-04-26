@@ -1,2 +1,2 @@
-# SS2025-REAL-TIME-SYSTEMS-Seminar
+# SS2025-Dynamic-Sporadic-ServerS-Seminar
 Dynamic Sporadic Server
