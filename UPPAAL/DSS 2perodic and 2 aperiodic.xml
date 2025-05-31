@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>const int Cs = 3;         // DSS capacity
+const int Ts = 6;         // DSS replenishment period
+
+int c_server = Cs;        // current capacity
+int d_server = -1;        // next replenish time
+int time = 0;             // logical time (integer clock)
+bool dss_grant = false;   // DSS allows aperiodic to run
+
+bool aperiodic_request1 = false;
+bool aperiodic_request2 = false;
+</declaration>
+	<template>
+		<name x="5" y="5">PeriodicTask1</name>
+		<declaration>clock x;
+const int period = 8;
+const int exec_time = 2;
+</declaration>
+		<location id="id0" x="-773" y="-221">
+			<name x="-807" y="-255">Idle</name>
+		</location>
+		<location id="id1" x="-408" y="-221">
+			<name x="-418" y="-255">Ready</name>
+		</location>
+		<location id="id2" x="-42" y="-221">
+			<name x="-52" y="-255">Execution</name>
+		</location>
+		<location id="id3" x="340" y="-221">
+			<name x="348" y="-255">done</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="255" y="-306">x = 0</label>
+			<nail x="272" y="-357"/>
+			<nail x="-739" y="-357"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="51" y="-255">x &gt;= exec_time</label>
+			<label kind="assignment" x="-24" y="-221">x = 0</label>
+		</transition>
+		<transition id="id6">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="-390" y="-221">x = 0</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-731" y="-246">x &gt;= period</label>
+		</transition>
+	</template>
+	<template>
+		<name>PeriodicTask2</name>
+		<declaration>clock x;
+const int period = 5;         
+const int exec_time = 1;     
+</declaration>
+		<location id="id8" x="-1249" y="-170">
+			<name x="-1259" y="-204">Idle</name>
+		</location>
+		<location id="id9" x="-765" y="-170">
+			<name x="-775" y="-204">Ready</name>
+		</location>
+		<location id="id10" x="-314" y="-170">
+			<name x="-297" y="-196">Execution</name>
+		</location>
+		<location id="id11" x="-765" y="-8">
+			<name x="-775" y="-42">done</name>
+		</location>
+		<init ref="id8"/>
+		<transition id="id12">
+			<source ref="id11"/>
+			<target ref="id8"/>
+			<label kind="assignment" x="-901" y="-34">x = 0</label>
+		</transition>
+		<transition id="id13">
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-620" y="-127">x &gt;= exec_time</label>
+			<label kind="assignment" x="-518" y="-85">x = 0</label>
+		</transition>
+		<transition id="id14">
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="assignment" x="-663" y="-195">x = 0</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-1198" y="-204">x &gt;= period</label>
+			<label kind="assignment" x="-1173" y="-161">x = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>AperiodicTask1</name>
+		<declaration>clock x;
+const int exec_time = 2;  // Change as needed
+</declaration>
+		<location id="id16" x="-756" y="-127">
+			<name x="-790" y="-170">Idle</name>
+		</location>
+		<location id="id17" x="-263" y="-127">
+			<name x="-273" y="-161">ready</name>
+		</location>
+		<location id="id18" x="187" y="-127">
+			<name x="177" y="-161">Execution</name>
+		</location>
+		<location id="id19" x="595" y="-127">
+			<name x="585" y="-161">done</name>
+		</location>
+		<init ref="id16"/>
+		<transition id="id20">
+			<source ref="id19"/>
+			<target ref="id16"/>
+			<label kind="assignment" x="501" y="-204">x = 0</label>
+			<nail x="527" y="-255"/>
+			<nail x="-722" y="-263"/>
+		</transition>
+		<transition id="id21">
+			<source ref="id18"/>
+			<target ref="id19"/>
+			<label kind="guard" x="272" y="-153">x &gt;= exec_time</label>
+			<label kind="assignment" x="205" y="-127">x = 0</label>
+		</transition>
+		<transition id="id22">
+			<source ref="id17"/>
+			<target ref="id18"/>
+			<label kind="guard" x="-204" y="-153">dss_grant</label>
+			<label kind="assignment" x="-245" y="-127">x = 0</label>
+		</transition>
+		<transition id="id23">
+			<source ref="id16"/>
+			<target ref="id17"/>
+			<label kind="guard" x="-738" y="-161">aperiodic_request1</label>
+			<label kind="assignment" x="-738" y="-127">aperiodic_request1 = false,
+x = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>AperiodicTask2</name>
+		<declaration>clock x;
+const int exec_time = 3;  // Change as needed
+</declaration>
+		<location id="id24" x="-782" y="-85">
+			<name x="-816" y="-119">idle</name>
+		</location>
+		<location id="id25" x="-374" y="-85">
+			<name x="-384" y="-119">Ready</name>
+		</location>
+		<location id="id26" x="59" y="-85">
+			<name x="49" y="-119">Execution</name>
+		</location>
+		<location id="id27" x="467" y="-85">
+			<name x="467" y="-119">Done</name>
+		</location>
+		<init ref="id24"/>
+		<transition id="id28">
+			<source ref="id27"/>
+			<target ref="id24"/>
+			<label kind="assignment" x="-696" y="-221">x = 0</label>
+			<nail x="433" y="-221"/>
+			<nail x="-714" y="-221"/>
+		</transition>
+		<transition id="id29">
+			<source ref="id26"/>
+			<target ref="id27"/>
+			<label kind="guard" x="161" y="-119">x &gt;= exec_time</label>
+			<label kind="assignment" x="111" y="-85">x = 0</label>
+			<nail x="93" y="-85"/>
+		</transition>
+		<transition id="id30">
+			<source ref="id25"/>
+			<target ref="id26"/>
+			<label kind="guard" x="-280" y="-119">dss_grant</label>
+			<label kind="assignment" x="-356" y="-85">x = 0</label>
+		</transition>
+		<transition id="id31">
+			<source ref="id24"/>
+			<target ref="id25"/>
+			<label kind="guard" x="-764" y="-119">aperiodic_request2</label>
+			<label kind="assignment" x="-764" y="-85">aperiodic_request2 = false,
+x = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>Controller</name>
+		<declaration>int t = 0;
+</declaration>
+		<location id="id32" x="-748" y="-127">
+			<name x="-758" y="-161">start</name>
+		</location>
+		<location id="id33" x="-459" y="-127">
+			<name x="-493" y="-161">Wait</name>
+		</location>
+		<init ref="id32"/>
+		<transition id="id34">
+			<source ref="id33"/>
+			<target ref="id33"/>
+			<label kind="guard" x="-391" y="-204">t &lt;= 30</label>
+			<label kind="assignment" x="-382" y="-127">t++,
+time++,
+aperiodic_request1 = (t == 3) ? true : aperiodic_request1,
+aperiodic_request2 = (t == 12) ? true : aperiodic_request2</label>
+			<nail x="-399" y="-212"/>
+			<nail x="-399" y="-51"/>
+		</transition>
+		<transition id="id35">
+			<source ref="id32"/>
+			<target ref="id33"/>
+			<label kind="assignment" x="-730" y="-127">t = 0</label>
+		</transition>
+	</template>
+	<template>
+		<name>DSS_Server</name>
+		<declaration>int remaining;
+clock x;
+</declaration>
+		<location id="id36" x="-748" y="-102">
+			<name x="-799" y="-110">Idle</name>
+		</location>
+		<location id="id37" x="-102" y="-102">
+			<name x="-170" y="-136">Ready</name>
+		</location>
+		<location id="id38" x="280" y="-102">
+			<name x="170" y="-127">Execution</name>
+		</location>
+		<location id="id39" x="629" y="-110">
+			<name x="561" y="-135">done</name>
+		</location>
+		<location id="id40" x="552" y="85">
+			<name x="501" y="111">WaitReplenish</name>
+		</location>
+		<init ref="id36"/>
+		<transition id="id41">
+			<source ref="id40"/>
+			<target ref="id36"/>
+			<label kind="guard" x="-459" y="59">time &gt;= d_server</label>
+			<label kind="assignment" x="-459" y="85">c_server = Cs</label>
+			<nail x="-748" y="85"/>
+		</transition>
+		<transition id="id42">
+			<source ref="id39"/>
+			<target ref="id40"/>
+			<label kind="guard" x="612" y="-42">c_server == 0</label>
+		</transition>
+		<transition id="id43">
+			<source ref="id37"/>
+			<target ref="id38"/>
+			<label kind="assignment" x="-84" y="-102">x = 0</label>
+		</transition>
+		<transition id="id44">
+			<source ref="id36"/>
+			<target ref="id37"/>
+			<label kind="guard" x="-730" y="-136">(aperiodic_request1 || aperiodic_request2) &amp;&amp; c_server &gt; 0</label>
+			<label kind="assignment" x="-739" y="-85">remaining = (c_server &lt; 2) ? c_server : 2,
+d_server = time + Ts,
+c_server -= remaining,
+dss_grant = true,
+aperiodic_request1 = false, // or 2
+x = 0</label>
+		</transition>
+		<transition id="id45">
+			<source ref="id39"/>
+			<target ref="id36"/>
+			<label kind="guard" x="579" y="-195">c_server &gt; 0</label>
+			<nail x="561" y="-212"/>
+			<nail x="-705" y="-212"/>
+		</transition>
+		<transition id="id46">
+			<source ref="id38"/>
+			<target ref="id39"/>
+			<label kind="guard" x="298" y="-136">x &gt;= remaining</label>
+			<label kind="assignment" x="298" y="-102">x = 0, dss_grant = false</label>
+		</transition>
+	</template>
+	<system>P1 = PeriodicTask1();
+P2 = PeriodicTask2();
+AT1 = AperiodicTask1();
+AT2 = AperiodicTask2();
+DSS = DSS_Server();
+C = Controller();
+
+system P1, P2, AT1, AT2, DSS, C;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>
