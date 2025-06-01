@@ -1,0 +1,151 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage[backend=bibtex]{biblatex}
+\addbibresource{References.bib}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{booktabs}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  breaklines=true
+}
+
+\usepackage{tabularx}
+\usepackage{adjustbox}
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{ Dynamic Sporadic Server\\
+
+}
+
+\author{\IEEEauthorblockN{ Moiz Zaheer Malik}
+\IEEEauthorblockA{\textit{ B.Eng. Electronic Engineering} \\
+\textit{Hochschule Hamm-Lippstadt}\\
+Lippstadt, Germany \\
+moiz-zaheer.malik@stud.hshl.de}
+
+}
+
+\maketitle
+
+\begin{abstract}
+In real-time systems, where tasks have different levels of critical importance, it is essential to serve aperiodic (irregular, event-driven) tasks while ensuring that the deadlines of high-priority periodic tasks are not violated. The Dynamic Sporadic Server (DSS) is a scheduling method designed for Earliest Deadline First (EDF) systems that addresses this problem. 
+
+DSS is defined by a period  $T_s$ and a budget $C_s$, but unlike traditional sporadic servers, it does not restore the full budget at every period. Instead, when an aperiodic task arrives, DSS assigns it a deadline and restores only the amount of budget that was actually used. This approach allows the processor to reach full (100 percent) utilization while ensuring that all deadlines are still met. DSS improves the response time of aperiodic tasks without compromising the guarantees of periodic tasks.
+
+Originally introduced by Spuri and Buttazzo\cite{spuri1994efficient}, DSS has been widely studied for its efficiency in managing mixed task sets under EDF scheduling. This report reviews the theory behind DSS, describes its operation (including budget management), highlights its advantages over traditional methods, and discusses potential application areas.
+ 
+\end{abstract}
+\section*{How My Study Notes Contributed to This Paper}
+
+To prepare for this seminar paper, I created detailed handwritten notes that helped me build a strong foundation and structure the content clearly. These notes included both theoretical understanding and practical modeling.
+
+\begin{itemize}
+ \item I wrote down the main reasons why Sporadic Servers are used. I understood that they are made for handling aperiodic tasks without disturbing the timing of periodic tasks. That idea made a lot of sense once I saw how deadlines can get missed otherwise.
+
+\item In my notes I explained how a Sporadic Server works. It has a fixed budget and a replenishment period, and it runs like a task with its own priority level. I tried to write it down in my own words so I could remember it easily.
+
+\item I also practiced with a Gantt chart to go through the scheduling rules, especially Rule C2, and also Rule R2 and R3. Drawing it out helped me see how tasks interact and how the server keeps its budget under control.
+
+\item Later I moved on to Dynamic Sporadic Server (DSS), which works with EDF (Earliest Deadline First) scheduling. I noted how DSS is more flexible because it can change deadlines on the fly based on the task's needs.
+
+\item I drew more Gantt charts for EDF scheduling to really understand how it works. I also studied utilization and wrote formulas like \( U_p + U_s \leq 1 \) in my notes to check if a schedule is valid or not.
+
+\item I also compared RMS (Rate Monotonic Scheduling) with EDF to see how one is fixed-priority (static) and the other is dynamic. This helped me understand the pros and cons of each.
+
+\item At the end, these notes really helped me when I was modeling the DSS behavior in UPPAAL. Since I already had examples and rules written down, I didn’t get stuck while writing the paper.
+
+
+\end{itemize}
+
+\section*{Section Summaries}
+
+\begin{itemize}
+    \item \textbf{Abstract} \\
+    This paper explains how the Dynamic Sporadic Server (DSS) helps in running aperiodic tasks without missing deadlines for periodic tasks. DSS works with EDF scheduling and tries to keep the processor busy as much as possible. It gives better response times and still makes sure that periodic jobs run on time.
+
+    \item \textbf{I. Introduction} \\
+    In real-time systems, we often have both periodic tasks (which repeat regularly) and aperiodic tasks (which come randomly). The problem is how to serve aperiodic tasks quickly without disturbing the periodic ones. DSS is a good solution for this in EDF-based systems.
+
+    \item \textbf{II. Background} \\
+    This section explains the basic types of tasks: periodic, sporadic, and aperiodic. It also talks about EDF scheduling and how it decides which task to run based on deadlines. The condition \( U_p + U_a \leq 1 \) is important to make sure deadlines are met when using EDF.
+
+    \item \textbf{III. Sporadic and Dynamic Servers} \\
+    Here, I explain the difference between the old Sporadic Server and the new DSS. The normal Sporadic Server works with fixed priority and resets budget differently. DSS works with dynamic deadlines and only adds back the budget that was used. This makes it more flexible under EDF.
+
+    \item \textbf{IV. Dynamic Sporadic Server Simulation} \\
+    I describe a small example where two periodic tasks run along with DSS, which serves incoming aperiodic jobs. It shows how DSS gets activated when needed, sets a deadline, and uses its budget. This helps to understand how DSS works in real scenarios.
+
+   \item \textbf{V. DSS Simulation Overview} \\
+To verify the behavior of the Dynamic Sporadic Server, I modeled a simulation in UPPAAL with two periodic tasks and two aperiodic tasks served by a DSS. Each task and the server were represented as timed automata. The DSS handled aperiodic requests based on remaining capacity and replenishment rules. The simulation confirmed that DSS allowed timely execution of periodic tasks while serving aperiodic ones without deadline violations. Gantt charts generated from UPPAAL helped visualize task scheduling under EDF.
+
+
+    \item \textbf{VI. Comparison With Other Servers} \\
+    DSS is compared with other types of servers like Polling, Deferrable, and normal Sporadic Servers. The table shows how DSS is better in some ways — especially in using CPU time more efficiently and responding faster to aperiodic jobs.
+
+    \item \textbf{VII. Applications and Use Cases} \\
+    DSS is used in many systems where real-time response is important. This includes cars (ECUs), robots, avionics, multimedia, and medical devices. It’s useful where both regular and unexpected tasks happen, and all need to be handled without delays.
+
+    \item \textbf{VIII. Limitations and Practical Considerations} \\
+    DSS is helpful but not always easy to implement. It needs dynamic deadline management and careful handling of budget. It works well with EDF but not with fixed-priority systems. Things like context switching, server overload, and multicore systems also make it harder.
+
+    \item \textbf{IX. Conclusion} \\
+    DSS gives a smart way to handle aperiodic tasks in real-time systems using EDF. It keeps the system efficient and avoids deadline misses. Even though it's more complex than other servers, it offers good control and better utilization.
+\end{itemize}
+
+\section*{Reference Contributions}
+
+Here’s how each reference helped me while writing this seminar paper:
+
+\begin{itemize}
+    \item \textbf{[1] Magnus Bengtsson and Elias Karlsson (2020)}\\
+    I used this to give a real-life example from the automotive industry in the applications section. It helped me show how DSS can be used in ECUs to handle braking events without delaying periodic engine control tasks.
+
+    \item \textbf{[2] Giorgio C. Buttazzo (2011)}\\
+    This book was the main source for explaining how DSS works. I used it in multiple sections, especially for the schedulability condition \( U_p + U_s \leq 1 \), the rules for activation and replenishment, and the comparison table between different server types.
+
+    \item \textbf{[3] John Kingston and Ying Wang (2023)}\\
+    This was used in the limitations section when I talked about DSS on multicore systems. It helped explain why implementing DSS on multiple cores can be more complicated.
+
+    \item \textbf{[4] Philip A. Laplante (2011)}\\
+    I used this to describe the basics of periodic, sporadic, and aperiodic tasks. It was also helpful in explaining the need for server-based scheduling before introducing DSS.
+
+    \item \textbf{[5] C. L. Liu and J. W. Layland (1973)}\\
+    This paper was referenced for the EDF schedulability rule \( U_p \leq 1 \), which I included in the background section. It’s important for understanding how EDF handles periodic tasks before adding aperiodic ones through DSS.
+
+    \item \textbf{[6] Barry Sprunt, Lui Sha, and John Lehoczky (1989)}\\
+    I used this to explain the original Sporadic Server. It was helpful when comparing DSS with older server models and showing how fixed-priority servers manage budget differently.
+
+    \item \textbf{[7] Marco Spuri and Giorgio C. Buttazzo (1994)}\\
+    This paper defines the Dynamic Sporadic Server itself. It was the main source for how DSS sets deadlines, manages budget, and maintains EDF feasibility. I used it throughout the theory sections.
+
+    \item \textbf{[8] University of British Columbia (2025)}\\
+    These course notes helped me when writing the simulation section. I followed their explanation of how the DSS activates, runs, and replenishes, and also used them for the timeline and logic in the C++ code example.
+\end{itemize}
+
+
+
+
+\printbibliography
+
+
+\vspace{12pt}
+\color{red}
+
+
+\end{document}
